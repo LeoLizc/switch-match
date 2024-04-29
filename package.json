@@ -1,17 +1,26 @@
 {
   "name": "switch-match",
+  "author": {
+    "name": "Leonardo Lizcano",
+    "email": "leolizcanop@gmail.com"
+  },
   "version": "1.0.0",
   "description": "appling match pattern",
-  "type": "module",
   "scripts": {
-    "build": "tsc",
+    "build:node": "tsc -p tsconfig.node.json",
+    "build:browser": "tsc -p tsconfig.web.json",
+    "build": "pnpm run build:node && pnpm run build:browser",
     "test": "jest"
   },
+  "types": "./dist/index.d.ts",
   "devDependencies": {
     "@types/jest": "^29.5.12",
     "jest": "^29.7.0",
     "ts-jest": "^29.1.2",
     "typescript": "^5.4.5"
+  },
+  "exports": {
+    ".": "./dist/index.js"
   },
   "jest": {
     "preset": "ts-jest",

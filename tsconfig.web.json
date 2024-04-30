@@ -4,5 +4,6 @@
     "module": "ESNext",
     "moduleResolution": "Bundler",
     "outDir": "./dist/web",
+    "declarationDir": "./dist/web/types"
   }
 }

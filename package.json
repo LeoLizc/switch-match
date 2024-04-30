@@ -23,10 +23,6 @@
   "exports": {
     ".": "./dist/index.js"
   },
-  "jest": {
-    "preset": "ts-jest",
-    "testEnvironment": "node"
-  },
   "dependencies": {
     "deep-equal": "^2.2.3"
   }

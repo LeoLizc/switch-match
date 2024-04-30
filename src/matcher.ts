@@ -1,6 +1,6 @@
 import equal from 'deep-equal';
 
-class SMMatcher<T, K = any> {
+export class SMMatcher<T, K = any> {
   private _matcher: T;
   private _value?: K;
 

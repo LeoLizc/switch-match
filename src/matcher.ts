@@ -50,18 +50,24 @@ export class SMMatcher<T, K = any> {
     if (this._matched) {
       this._break = true;
     }
+
+    return this;
   }
 
   default(handler: () => K) {
     if (!this._matched) {
       this._default = handler;
     }
+
+    return this;
   }
 
   defaultTo(value: K) {
     if (this._value === undefined) {
       this._defaultValue = value;
     }
+
+    return this;
   }
 
   value() {
@@ -86,7 +92,7 @@ type MatchOptions = {
   autoBreak: boolean;
 };
 
-export function match<K, T>(value: T, { autoBreak }: MatchOptions = {autoBreak: false}): SMMatcher<T, K> {
+export function match<T, K>(value: T, { autoBreak }: MatchOptions = {autoBreak: true}): SMMatcher<T, K> {
   return new SMMatcher(
     value,
     { autoBreak }

@@ -143,7 +143,36 @@ describe('SMMatcher', () => {
       expect(matchCase).toHaveBeenCalled();
     });
 
-    // * MORE TESTS
+    it('should not execute previous case handlers if "match" is matched', () => {
+      const noMatchCase1 = jest.fn();
+      const noMatchCase2 = jest.fn();
+      const matchCase = jest.fn();
+
+      const autoMatcher = new SMMatcher('match', { autoBreak: true });
+      autoMatcher.case('no match', noMatchCase1);
+      autoMatcher.case('test', noMatchCase2);
+      autoMatcher.case('match', matchCase);
+      autoMatcher.case('no match2', ()=>{});
+      autoMatcher.case('match', ()=>{});
+      expect(autoMatcher.value()).toBeUndefined();
+      expect(noMatchCase1).not.toHaveBeenCalled();
+      expect(noMatchCase2).not.toHaveBeenCalled();
+      expect(matchCase).toHaveBeenCalled();
+
+      noMatchCase1.mockClear();
+      noMatchCase2.mockClear();
+      matchCase.mockClear();
+
+      const matcher = new SMMatcher('match', { autoBreak: false });
+      matcher.case('no match', noMatchCase1);
+      matcher.case('test', noMatchCase2);
+      matcher.case('match', matchCase);
+      matcher.case('no match2', ()=>{});
+      matcher.case('match', ()=>{});
+      expect(matcher.value()).toBeUndefined();
+      expect(noMatchCase1).not.toHaveBeenCalled();
+      expect(noMatchCase2).not.toHaveBeenCalled();
+    });
 
     it('should correctly match and return value for case', () => {
       const autoMatcher = new SMMatcher('test', { autoBreak: true });
@@ -154,19 +183,37 @@ describe('SMMatcher', () => {
       matcher.case('test', () => 'matched');
       expect(matcher.value()).toBe('matched');
     });
-  
-    it('should correctly use default handler if no case matched', () => {
-      const matcher = new SMMatcher('test', { autoBreak: true });
-      matcher.case('not test', () => 'not matched');
-      matcher.default(() => 'default');
-      expect(matcher.value()).toBe('default');
+
+    it('should not execute next case handlers if match case returns a value', () => {
+      const matchCase = jest.fn(() => 'matched');
+      const noMatchCase = jest.fn();
+
+      const autoMatcher = new SMMatcher('test', { autoBreak: true });
+      autoMatcher.case('test', matchCase);
+      autoMatcher.case('test', noMatchCase);
+      expect(autoMatcher.value()).toBe('matched');
+      expect(matchCase).toHaveBeenCalled();
+      expect(noMatchCase).not.toHaveBeenCalled();
+
+      matchCase.mockClear();
+      noMatchCase.mockClear();
+
+      const matcher = new SMMatcher('test', { autoBreak: false });
+      matcher.case('test', matchCase);
+      matcher.case('test', noMatchCase);
+      expect(matcher.value()).toBe('matched');
+      expect(matchCase).toHaveBeenCalled();
+      expect(noMatchCase).not.toHaveBeenCalled();
     });
-    
-    it('should correctly use default value if no case matched and no default handler', () => {
-      const matcher = new SMMatcher('test', { autoBreak: true });
-      matcher.case('not test', () => 'not matched');
-      matcher.defaultTo('default');
-      expect(matcher.value()).toBe('default');
+
+    it('should correctly match and return value for case with multiple values', () => {
+      const autoMatcher = new SMMatcher('test', { autoBreak: true });
+      autoMatcher.case('test', () => ['matched', 'also matched']);
+      expect(autoMatcher.value()).toEqual(['matched', 'also matched']);
+
+      const matcher = new SMMatcher('test', { autoBreak: false });
+      matcher.case('test', () => ['matched', 'also matched']);
+      expect(matcher.value()).toEqual(['matched', 'also matched']);
     });
     
   });

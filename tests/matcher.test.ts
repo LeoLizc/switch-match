@@ -216,6 +216,13 @@ describe('SMMatcher', () => {
       expect(matcher.value()).toEqual(['matched', 'also matched']);
     });
     
+    /* 
+    TODO: 
+    Probar el encadenamiento de operaciones en cualquier orden
+    TODO: Probar que devuelve el valor si matchea un caso que tiene un valor en lugar de una función
+    TODO: Probar que matchea correctamente si el valor es un objeto o una lista
+    
+     */
   });
 
   describe('Auto Break', () => {

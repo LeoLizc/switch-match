@@ -7,6 +7,7 @@ type MatchOptions = {
 
 type CaseHandler<K> = () => (K | undefined);
 
+// TODO: Fix name
 type prueba<K> = K extends Function ? () => (K | undefined) : () => (K | undefined) | K;
 
 export class SMMatcher<T, K = any> {
@@ -109,5 +110,15 @@ export function match<T, K>(value: T, { autoBreak }: MatchOptions = {autoBreak: 
     { autoBreak }
   );
 }
+
+const a = {'a': 5};
+
+const res = match<boolean, string>(true, {autoBreak: false})
+  .case(5>3, () => 'five') // * Posibilidad de no pasar función anonima
+  .break()
+  .case(4<4, () => 'six')
+  .defaultTo('default')
+  .default(() => 'default')
+  .value();
 
 export default match;

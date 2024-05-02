@@ -42,6 +42,11 @@ export class SMSwitcher<T, K = any> {
   }
 
   default(handler: HandlerType<K>) {
+
+    if (this._default !== undefined) {
+      throw new Error('Default already defined');
+    }
+
     this._default = this._Nodes.length;
     this._Nodes.push({
       type: 'default',
@@ -135,18 +140,3 @@ const s = new SMSwitcher<number, string>({ autoBreak: false})
   .case(2, 'two')
   .default('unknown')
   .case(3, 'three')
-
-let a = 3;
-
-switch(a) {
-  case 1:
-    console.log('one');
-    break;
-  case 2:
-    console.log('two');
-  default:
-    console.log('unknown');
-  case 3:
-    console.log('three');
-    break;
-}

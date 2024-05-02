@@ -5,7 +5,10 @@ type MatchOptions = {
   autoBreak: boolean;
 };
 
-type CaseHandler<K> = () => K | undefined;
+type CaseHandler<K> = () => (K | undefined);
+
+type prueba<K> = K extends Function ? () => (K | undefined) : () => (K | undefined) | K;
+
 export class SMMatcher<T, K = any> {
   private _matcher: T;
   private _value?: K;
@@ -26,7 +29,7 @@ export class SMMatcher<T, K = any> {
 
   }
 
-  case(condition: T, handler: CaseHandler<K>){
+  case(condition: T, handler: prueba<K>){
 
     if (this._value !== undefined || this._break) {
       return this;
@@ -42,7 +45,13 @@ export class SMMatcher<T, K = any> {
     }
 
     if (matched || this._matched) {
-      this._value = handler();
+      
+      if (typeof handler === 'function') {
+        this._value = handler();
+      } else {
+        this._value = handler;
+      }
+
       this._matched = true;
       if (this._autoBreak) {
         this._break = true;

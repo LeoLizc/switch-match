@@ -1,5 +1,11 @@
 import equal from 'deep-equal';
 
+
+type MatchOptions = {
+  autoBreak: boolean;
+};
+
+type CaseHandler<K> = () => K | undefined;
 export class SMMatcher<T, K = any> {
   private _matcher: T;
   private _value?: K;
@@ -9,7 +15,7 @@ export class SMMatcher<T, K = any> {
   private _break: boolean = false;
   private _matched: boolean = false;
 
-  private _default?: () => K;
+  private _default?: CaseHandler<K>;
   private _defaultValue?: K;
 
   constructor(value: T, { autoBreak }: MatchOptions) {
@@ -20,7 +26,7 @@ export class SMMatcher<T, K = any> {
 
   }
 
-  case(condition: T, handler: () => K | undefined){
+  case(condition: T, handler: CaseHandler<K>){
 
     if (this._value !== undefined || this._break) {
       return this;
@@ -54,7 +60,7 @@ export class SMMatcher<T, K = any> {
     return this;
   }
 
-  default(handler: () => K) {
+  default(handler: CaseHandler<K>) {
     if (!this._matched) {
       this._default = handler;
     }
@@ -87,10 +93,6 @@ export class SMMatcher<T, K = any> {
   }
 
 }
-
-type MatchOptions = {
-  autoBreak: boolean;
-};
 
 export function match<T, K>(value: T, { autoBreak }: MatchOptions = {autoBreak: true}): SMMatcher<T, K> {
   return new SMMatcher(

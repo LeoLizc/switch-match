@@ -21,9 +21,9 @@
     "postpublish": "rimraf package"
   },
   "exports": {
-    ".": "./dist/index.js"
+    ".": "./dist_node/index.js"
   },
-  "types": "./dist/node/types",
+  "types": "./dist_node/types",
   "dependencies": {
     "deep-equal": "^2.2.3"
   },

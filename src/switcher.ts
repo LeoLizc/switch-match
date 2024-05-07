@@ -134,9 +134,4 @@ export class SMSwitcher<T, K = any> {
 
 }
 
-const s = new SMSwitcher<number, string>({ autoBreak: false})
-  .case(1, 'one')
-  .break()
-  .case(2, 'two')
-  .default('unknown')
-  .case(3, 'three')
+export default SMSwitcher;

@@ -1,5 +1,6 @@
 {
   "name": "switch-matcher",
+  "description": "Simple lightweight match pattern",
   "version": "0.9.5",
   "author": {
     "name": "Leonardo Lizcano",
@@ -9,7 +10,7 @@
     "type": "git",
     "url": "https://github.com/LeoLizc/switch-matcher"
   },
-  "description": "Simple lightweight match pattern",
+  "license": "MIT",
   "scripts": {
     "build:node": "tsc -p tsconfig.node.json",
     "build:browser": "tsc -p tsconfig.web.json",

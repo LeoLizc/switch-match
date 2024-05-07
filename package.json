@@ -1,11 +1,15 @@
 {
   "name": "switch-match",
+  "version": "1.0.0",
   "author": {
     "name": "Leonardo Lizcano",
     "email": "leolizcanop@gmail.com"
   },
-  "version": "1.0.0",
-  "description": "appling match pattern",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/LeoLizc/switch-match"
+  },
+  "description": "Simple lightweight match pattern",
   "scripts": {
     "build:node": "tsc -p tsconfig.node.json",
     "build:browser": "tsc -p tsconfig.web.json",
@@ -24,7 +28,6 @@
     ".": "./dist/index.js"
   },
   "dependencies": {
-    "clean-publish": "^4.4.0",
     "deep-equal": "^2.2.3"
   }
 }

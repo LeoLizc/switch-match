@@ -18,8 +18,8 @@
     "build": "pnpm run build:node",
     "build:clean": "pnpm run clean && pnpm run build",
     "test": "jest",
-    "prepublishOnly": "rimraf package && pnpm run build:clean && clean-publish",
-    "postpublish": "rimraf package"
+    "prepublishOnly": "rimraf tempPackage && pnpm run build:clean && clean-publish",
+    "postpublish": "rimraf tempPackage"
   },
   "exports": {
     ".": "./dist_node/index.js"

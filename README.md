@@ -22,12 +22,12 @@ npm install switch-match
 
 ## Usage
 
-To use the library, you need to import the `switchMatch` function and use it in your code.
+To use the library, you need to import the `match` function and use it in your code.
 
 ```javascript
-import { switchMatch } from "switch-match";
+import { match } from "switch-match";
 
-const result = switchMatch(5)
+const result = match(5)
   .case(1, () => "One")
   .case(2, () => "Two")
   .case(3, () => "Three")

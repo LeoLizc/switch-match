@@ -1,4 +1,4 @@
-# Switch Match
+# Switch Matcher
 
 <div align="center">
 
@@ -25,7 +25,7 @@ npm install switch-match
 To use the library, you need to import the `match` function and use it in your code.
 
 ```javascript
-import { match } from "switch-match";
+import { match } from "switch-matcher";
 
 const result = match(5)
   .case(1, () => "One")

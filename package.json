@@ -1,13 +1,13 @@
 {
-  "name": "switch-match",
-  "version": "1.0.0",
+  "name": "switch-matcher",
+  "version": "0.9.5",
   "author": {
     "name": "Leonardo Lizcano",
     "email": "leolizcanop@gmail.com"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/LeoLizc/switch-match"
+    "url": "https://github.com/LeoLizc/switch-matcher"
   },
   "description": "Simple lightweight match pattern",
   "scripts": {

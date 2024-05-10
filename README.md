@@ -1,4 +1,3 @@
-
 # Switch Matcher <span style="float:right;">[![Estado del Proyecto](https://img.shields.io/badge/Estado-En%20progreso-yellow.svg)](https://github.com/LeoLizc/switch-matcher)</span>
 
 Simple and lightweight library to handle switch statements and Pattern Matching in JavaScript and typescript.
@@ -13,8 +12,8 @@ npm install switch-match
 
 ## Features
 
-- **Simple**: Uses a syntax similar to JavaScript switch statements.
-- **Lightweight**: Has no dependencies and is very lightweight.
+- **Simple**: Uses a syntax similar to JavaScript switch statements and chainable methods.
+- **Lightweight**: Has few dependencies and is very lightweight.
 - **Versatile**: Can be used in any JavaScript or TypeScript project.
 
 ## Usage

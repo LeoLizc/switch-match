@@ -7,7 +7,7 @@ Simple and lightweight library to handle switch statements and Pattern Matching 
 To install the package, you can use npm or your favorite package manager.
 
 ```bash
-npm install switch-match
+npm install switch-matcher
 ```
 
 ## Features

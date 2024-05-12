@@ -128,19 +128,11 @@ export class SMSwitcher<T, K = any> {
     let [matched, result] = this._run(value);
 
     if (!matched && this._default !== undefined) {
-      const node = this._Nodes[this._default];
-      if (node.type === 'default') {
-        if (typeof node.handler === 'function') {
-          result = (node.handler as SwitchHandler<K>)();
-        } else {
-          result = node.handler;
-        }
+      if (this._Nodes[this._default].type !== 'default') {
+        throw new Error('Invalid default node');
       }
 
-      if (!this._autoBreak && result === undefined) {
-        [matched, result] = this._run(value, this._default + 1);
-      }
-
+      [matched, result] = this._run(value, this._default, true);
     }
 
     if (result === undefined && this._else !== undefined) {

@@ -82,9 +82,8 @@ export class SMSwitcher<T, K = any> {
     return this;
   }
 
-  private _run(value: T, index: number = 0): [boolean, K | undefined] {
+  private _run(value: T, index: number = 0, matched = false): [boolean, K | undefined] {
     let result: K | undefined = undefined;
-    let matched = false;
 
     for (let i = index; i < this._Nodes.length; i++) {
       const node = this._Nodes[i];
@@ -94,10 +93,9 @@ export class SMSwitcher<T, K = any> {
         }
         continue;
       }
-
-      if (node.type === 'default') continue;
       
       if (!matched){
+        if (node.type === 'default') continue;
         if (typeof node.condition === 'function') {
           if ((node.condition as SwitchCallback<T>)(value)) {
             matched = true;

@@ -5,6 +5,10 @@ type MatchingType<T> = T | ((value: T) => boolean);
 type SwitchHandler<K> = () => K | undefined;
 type HandlerType<K> = K | SwitchHandler<K>;
 
+type ElseType<K> = K extends Function ?
+      () => K
+      : K | (() => K);
+
 type Node<T, K> = { 
   type: 'break'; // TODO: Separate this type into a new file
 } | {
@@ -20,6 +24,7 @@ export class SMSwitcher<T, K = any> {
   
   private _Nodes: Node<T, K>[] = [];
   private _default?: number;
+  private _else?: ElseType<K>;
 
   private _autoBreak: boolean = true;
 
@@ -62,6 +67,17 @@ export class SMSwitcher<T, K = any> {
     this._Nodes.push({
       type: 'break',
     });
+
+    return this;
+  }
+
+  elseValue(handler: ElseType<K>): this {
+
+    if (this._else !== undefined) {
+      throw new Error('Else already defined');
+    }
+
+    this._else = handler;
 
     return this;
   }
@@ -127,6 +143,14 @@ export class SMSwitcher<T, K = any> {
         [matched, result] = this._run(value, this._default + 1);
       }
 
+    }
+
+    if (result === undefined && this._else !== undefined) {
+      if (typeof this._else === 'function') {
+        result = this._else();
+      } else {
+        result = this._else as K;
+      }
     }
 
     return result;  

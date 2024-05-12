@@ -29,7 +29,7 @@ export class SMSwitcher<T, K = any> {
   private _autoBreak: boolean = true;
 
   constructor({ autoBreak }: { autoBreak?: boolean } = {}) {
-    this._autoBreak = autoBreak || true;
+    this._autoBreak = autoBreak ?? true;
   }
 
   case(callback: SwitchCallback<T>, handler: SwitchHandler<K>): this

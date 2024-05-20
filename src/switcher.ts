@@ -123,11 +123,11 @@ export class SMSwitcher<T, K = any> {
     return [matched, result];
   }
 
-  async evaluate(value: T): Promise<K | undefined> {
-    return this.syncEvaluate(value);
+  async eval(value: T): Promise<K | undefined> {
+    return this.syncEval(value);
   }
 
-  syncEvaluate(value: T): K | undefined {
+  syncEval(value: T): K | undefined {
 
     let [matched, result] = this._run(value);
 

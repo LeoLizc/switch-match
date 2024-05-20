@@ -124,6 +124,10 @@ export class SMSwitcher<T, K = any> {
   }
 
   async evaluate(value: T): Promise<K | undefined> {
+    return this.syncEvaluate(value);
+  }
+
+  syncEvaluate(value: T): K | undefined {
 
     let [matched, result] = this._run(value);
 

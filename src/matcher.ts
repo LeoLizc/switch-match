@@ -87,19 +87,20 @@ export class SMMatcher<T, K = any> {
   }
 
   value() {
-    if (this._value !== undefined) {
-      return this._value;
+    let value = this._value;
+    if (value !== undefined) {
+      return value;
     }
 
     if (!this._matched && this._default) {
-      this._value = this._default();
+      value = this._default();
     }
 
-    if (this._value === undefined) {
-      this._value = this._defaultValue;
+    if (value === undefined) {
+      value = this._defaultValue;
     }
 
-    return this._value;
+    return value;
   }
 
 }

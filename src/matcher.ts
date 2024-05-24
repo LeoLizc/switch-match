@@ -86,7 +86,7 @@ export class SMMatcher<T, K = any> {
     return this;
   }
 
-  value() {
+  get value() {
     let value = this._value;
     if (value !== undefined) {
       return value;
@@ -120,6 +120,6 @@ const res = match<boolean, string>(true, {autoBreak: false})
   .case(4<4, () => 'six')
   .else('default')
   .default(() => 'default')
-  .value();
+  .value;
 
 export default match;

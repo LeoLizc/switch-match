@@ -8,14 +8,14 @@ describe('SMMatcher', () => {
       const matcher = new SMMatcher('test', { autoBreak: false });
       matcher.case('test', () => 'matched');
       matcher.case('test', () => 'not matched');
-      expect(matcher.value()).toBe('matched');
+      expect(matcher.value).toBe('matched');
     });
 
     it('should not break after match if autoBreak is false if the match no returns a Value', () => {
       const matcher = new SMMatcher('test', { autoBreak: false });
       matcher.case('test', () => {'matched';});
       matcher.case('test', () => 'not matched');
-      expect(matcher.value()).toBe('not matched');
+      expect(matcher.value).toBe('not matched');
     });
 
     it('should correctly break if break method is called', () => {
@@ -24,7 +24,7 @@ describe('SMMatcher', () => {
       matcher.case('test', () => 'also matched');
       matcher.break();
       matcher.case('test', () => 'not matched');
-      expect(matcher.value()).toBe('also matched');
+      expect(matcher.value).toBe('also matched');
     });
   });
 
@@ -32,10 +32,10 @@ describe('SMMatcher', () => {
 
     it('should return undefined if no action is set', () => {
       const autoMatcher = new SMMatcher('test', { autoBreak: true });
-      expect(autoMatcher.value()).toBeUndefined();
+      expect(autoMatcher.value).toBeUndefined();
 
       const matcher = new SMMatcher('test', { autoBreak: false });
-      expect(matcher.value()).toBeUndefined();
+      expect(matcher.value).toBeUndefined();
     });
     
     it('should return undefined if no case matched and no default', () => {
@@ -45,7 +45,7 @@ describe('SMMatcher', () => {
       const autoMatcher = new SMMatcher('test', { autoBreak: true });
       autoMatcher.case('not test', mockCase1);
       autoMatcher.case('not match', mockCase2);
-      expect(autoMatcher.value()).toBeUndefined();
+      expect(autoMatcher.value).toBeUndefined();
       expect(mockCase1).not.toHaveBeenCalled();
       expect(mockCase2).not.toHaveBeenCalled();
 
@@ -55,7 +55,7 @@ describe('SMMatcher', () => {
       const matcher = new SMMatcher('test', { autoBreak: false });
       matcher.case('not test', mockCase1);
       matcher.case('not match', mockCase2);
-      expect(matcher.value()).toBeUndefined();
+      expect(matcher.value).toBeUndefined();
       expect(mockCase1).not.toHaveBeenCalled();
       expect(mockCase2).not.toHaveBeenCalled();
     });
@@ -63,17 +63,17 @@ describe('SMMatcher', () => {
     it('should return default value if no case matched and default value is set', () => {
       const autoMatcher = new SMMatcher('test', { autoBreak: true });
       autoMatcher.else('default');
-      expect(autoMatcher.value()).toBe('default');
+      expect(autoMatcher.value).toBe('default');
       autoMatcher.case('not test', () => 'not matched');
       autoMatcher.case('not Matched', () => 'not matched');
-      expect(autoMatcher.value()).toBe('default');
+      expect(autoMatcher.value).toBe('default');
 
       const matcher = new SMMatcher('test', { autoBreak: false });
       matcher.else('default');
-      expect(matcher.value()).toBe('default');
+      expect(matcher.value).toBe('default');
       matcher.case('not test', () => 'not matched');
       matcher.case('not matched', () => 'not matched');
-      expect(matcher.value()).toBe('default');
+      expect(matcher.value).toBe('default');
     });
 
     it('should execute default handler if no case matched and default handler is set', () => {
@@ -86,7 +86,7 @@ describe('SMMatcher', () => {
       autoMatcher.case('not test', mockCase1);
       autoMatcher.case('not Matched', mockCase2);
       autoMatcher.default(mockDefault);
-      expect(autoMatcher.value()).toBeUndefined();
+      expect(autoMatcher.value).toBeUndefined();
       expect(mockCase1).not.toHaveBeenCalled();
       expect(mockCase2).not.toHaveBeenCalled();
       expect(mockDefault).toHaveBeenCalled();
@@ -99,7 +99,7 @@ describe('SMMatcher', () => {
       matcher.case('not test', mockCase1);
       matcher.case('not matched', mockCase2);
       matcher.default(mockDefault);
-      expect(matcher.value()).toBeUndefined();
+      expect(matcher.value).toBeUndefined();
       expect(mockCase1).not.toHaveBeenCalled();
       expect(mockCase2).not.toHaveBeenCalled();
       expect(mockDefault).toHaveBeenCalled();
@@ -109,12 +109,12 @@ describe('SMMatcher', () => {
       const autoMatcher = new SMMatcher('test', { autoBreak: true });
       autoMatcher.default(() => {'default'});
       autoMatcher.else('defaultValue');
-      expect(autoMatcher.value()).toBe('defaultValue');
+      expect(autoMatcher.value).toBe('defaultValue');
 
       const matcher = new SMMatcher('test', { autoBreak: false });
       matcher.default(() => {'default'});
       matcher.else('defaultValue');
-      expect(matcher.value()).toBe('defaultValue');
+      expect(matcher.value).toBe('defaultValue');
     });
 
     it('should call the matchCase function when "match" is matched', () => {
@@ -127,7 +127,7 @@ describe('SMMatcher', () => {
       autoMatcher.case('no match2', ()=>{});
       autoMatcher.case('match', ()=>{});
       autoMatcher.case('test2', ()=>{});
-      expect(autoMatcher.value()).toBeUndefined();
+      expect(autoMatcher.value).toBeUndefined();
       expect(matchCase).toHaveBeenCalled();
 
       matchCase.mockClear();
@@ -139,7 +139,7 @@ describe('SMMatcher', () => {
       matcher.case('no match2', ()=>{});
       matcher.case('match', ()=>{});
       matcher.case('test2', ()=>{});
-      expect(matcher.value()).toBeUndefined();
+      expect(matcher.value).toBeUndefined();
       expect(matchCase).toHaveBeenCalled();
     });
 
@@ -154,7 +154,7 @@ describe('SMMatcher', () => {
       autoMatcher.case('match', matchCase);
       autoMatcher.case('no match2', ()=>{});
       autoMatcher.case('match', ()=>{});
-      expect(autoMatcher.value()).toBeUndefined();
+      expect(autoMatcher.value).toBeUndefined();
       expect(noMatchCase1).not.toHaveBeenCalled();
       expect(noMatchCase2).not.toHaveBeenCalled();
       expect(matchCase).toHaveBeenCalled();
@@ -169,7 +169,7 @@ describe('SMMatcher', () => {
       matcher.case('match', matchCase);
       matcher.case('no match2', ()=>{});
       matcher.case('match', ()=>{});
-      expect(matcher.value()).toBeUndefined();
+      expect(matcher.value).toBeUndefined();
       expect(noMatchCase1).not.toHaveBeenCalled();
       expect(noMatchCase2).not.toHaveBeenCalled();
     });
@@ -177,11 +177,11 @@ describe('SMMatcher', () => {
     it('should correctly match and return value for case', () => {
       const autoMatcher = new SMMatcher('test', { autoBreak: true });
       autoMatcher.case('test', () => 'matched');
-      expect(autoMatcher.value()).toBe('matched');
+      expect(autoMatcher.value).toBe('matched');
 
       const matcher = new SMMatcher('test', { autoBreak: false });
       matcher.case('test', () => 'matched');
-      expect(matcher.value()).toBe('matched');
+      expect(matcher.value).toBe('matched');
     });
 
     it('should not execute next case handlers if match case returns a value', () => {
@@ -191,7 +191,7 @@ describe('SMMatcher', () => {
       const autoMatcher = new SMMatcher('test', { autoBreak: true });
       autoMatcher.case('test', matchCase);
       autoMatcher.case('test', noMatchCase);
-      expect(autoMatcher.value()).toBe('matched');
+      expect(autoMatcher.value).toBe('matched');
       expect(matchCase).toHaveBeenCalled();
       expect(noMatchCase).not.toHaveBeenCalled();
 
@@ -201,7 +201,7 @@ describe('SMMatcher', () => {
       const matcher = new SMMatcher('test', { autoBreak: false });
       matcher.case('test', matchCase);
       matcher.case('test', noMatchCase);
-      expect(matcher.value()).toBe('matched');
+      expect(matcher.value).toBe('matched');
       expect(matchCase).toHaveBeenCalled();
       expect(noMatchCase).not.toHaveBeenCalled();
     });
@@ -209,11 +209,11 @@ describe('SMMatcher', () => {
     it('should correctly match and return value for case with multiple values', () => {
       const autoMatcher = new SMMatcher('test', { autoBreak: true });
       autoMatcher.case('test', () => ['matched', 'also matched']);
-      expect(autoMatcher.value()).toEqual(['matched', 'also matched']);
+      expect(autoMatcher.value).toEqual(['matched', 'also matched']);
 
       const matcher = new SMMatcher('test', { autoBreak: false });
       matcher.case('test', () => ['matched', 'also matched']);
-      expect(matcher.value()).toEqual(['matched', 'also matched']);
+      expect(matcher.value).toEqual(['matched', 'also matched']);
     });
     
     /* 
@@ -231,7 +231,7 @@ describe('SMMatcher', () => {
       const matcher = new SMMatcher('test', { autoBreak: true });
       matcher.case('test', () => 'matched');
       matcher.case('test', () => 'not matched');
-      expect(matcher.value()).toBe('matched');
+      expect(matcher.value).toBe('matched');
     });
   
   });

@@ -78,7 +78,7 @@ export class SMMatcher<T, K = any> {
     return this;
   }
 
-  defaultTo(value: K) {
+  else(value: K) {
     if (this._value === undefined) {
       this._defaultValue = value;
     }
@@ -118,7 +118,7 @@ const res = match<boolean, string>(true, {autoBreak: false})
   .case(5>3, () => 'five') // * Posibilidad de no pasar función anonima
   .break()
   .case(4<4, () => 'six')
-  .defaultTo('default')
+  .else('default')
   .default(() => 'default')
   .value();
 

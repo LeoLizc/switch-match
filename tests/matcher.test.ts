@@ -62,14 +62,14 @@ describe('SMMatcher', () => {
 
     it('should return default value if no case matched and default value is set', () => {
       const autoMatcher = new SMMatcher('test', { autoBreak: true });
-      autoMatcher.defaultTo('default');
+      autoMatcher.else('default');
       expect(autoMatcher.value()).toBe('default');
       autoMatcher.case('not test', () => 'not matched');
       autoMatcher.case('not Matched', () => 'not matched');
       expect(autoMatcher.value()).toBe('default');
 
       const matcher = new SMMatcher('test', { autoBreak: false });
-      matcher.defaultTo('default');
+      matcher.else('default');
       expect(matcher.value()).toBe('default');
       matcher.case('not test', () => 'not matched');
       matcher.case('not matched', () => 'not matched');
@@ -108,12 +108,12 @@ describe('SMMatcher', () => {
     it('should correctly use default handler and default value if no case matched', () => {
       const autoMatcher = new SMMatcher('test', { autoBreak: true });
       autoMatcher.default(() => {'default'});
-      autoMatcher.defaultTo('defaultValue');
+      autoMatcher.else('defaultValue');
       expect(autoMatcher.value()).toBe('defaultValue');
 
       const matcher = new SMMatcher('test', { autoBreak: false });
       matcher.default(() => {'default'});
-      matcher.defaultTo('defaultValue');
+      matcher.else('defaultValue');
       expect(matcher.value()).toBe('defaultValue');
     });
 

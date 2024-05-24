@@ -216,13 +216,249 @@ describe('SMMatcher', () => {
       expect(matcher.value).toEqual(['matched', 'also matched']);
     });
     
-    /* 
-    TODO: 
-    Probar el encadenamiento de operaciones en cualquier orden
-    TODO: Probar que devuelve el valor si matchea un caso que tiene un valor en lugar de una función
-    TODO: Probar que matchea correctamente si el valor es un objeto o una lista
+    it('should match default case until a match case returns a non-undefined value', () => {
+      const matchDefault = jest.fn(() => 'default');
+      const matchCase = jest.fn(() => 'matched');
+
+      const autoMatcher = new SMMatcher('test', { autoBreak: true });
+      autoMatcher.default(matchDefault);
+      expect(autoMatcher.value()).toBe('default');
+      autoMatcher.case('test', matchCase);
+      expect(autoMatcher.value()).toBe('matched');
+      expect(matchDefault).toHaveBeenCalled();
+      expect(matchCase).toHaveBeenCalled();
+
+      matchDefault.mockClear();
+      matchCase.mockClear();
+
+      const matcher = new SMMatcher('test', { autoBreak: false });
+      matcher.default(matchDefault);
+      expect(matcher.value()).toBe('default');
+      matcher.case('test', matchCase);
+      expect(matcher.value()).toBe('matched');
+      expect(matchDefault).toHaveBeenCalled();
+      expect(matchCase).toHaveBeenCalled();
+    });
     
-     */
+    it('should match default case if no match case', () => {
+      const matchCase = jest.fn(() => 'not matched');
+      const matchDefault = jest.fn(() => 'default');
+
+      const autoMatcher = new SMMatcher('test', { autoBreak: true });
+      autoMatcher.case('not test', matchCase);
+      expect(autoMatcher.value()).toBeUndefined();
+      expect(matchCase).not.toHaveBeenCalled();
+      autoMatcher.default(matchDefault);
+      expect(autoMatcher.value()).toBe('default');
+      expect(matchDefault).toHaveBeenCalled();
+
+      matchCase.mockClear();
+      matchDefault.mockClear();
+
+      const matcher = new SMMatcher('test', { autoBreak: false });
+      matcher.case('not test', matchCase);
+      expect(matcher.value()).toBeUndefined();
+      expect(matchCase).not.toHaveBeenCalled();
+      matcher.default(matchDefault);
+      expect(matcher.value()).toBe('default');
+      expect(matchDefault).toHaveBeenCalled();
+    });
+    
+    it('should execute the next clauses the correct way: case, default, defaultTo', () => {
+      const matchDefault1 = jest.fn(() => {'default 1'});
+      const matchDefaultTo1 = 'defaultTo 1';
+      const matchDefault2 = jest.fn(() => 'default 2');
+      const matchCase1 = jest.fn(() => {'matched 1'});
+      const noMatchCase1 = jest.fn(() => 'not matched 1');
+      const matchCase2 = jest.fn(() => 'matched 2');
+      const noMatchCase2 = jest.fn(() => {'not matched 2'});
+      const matchDefault3 = jest.fn(() => 'default 3');
+      const matchDefaultTo2 = 'defaultTo 2';
+
+      const autoMatcher = new SMMatcher('test', { autoBreak: true });
+      autoMatcher.default(matchDefault1);
+      expect(autoMatcher.value()).toBeUndefined();
+      expect(matchDefault1).toHaveBeenCalled();
+      autoMatcher.defaultTo(matchDefaultTo1);
+      expect(autoMatcher.value()).toBe(matchDefaultTo1);
+      autoMatcher.default(matchDefault2);
+      expect(autoMatcher.value()).toBe('default 2');
+      expect(matchDefault2).toHaveBeenCalled();
+      autoMatcher.case('test', matchCase1);
+      expect(autoMatcher.value()).toBe(matchDefaultTo1);
+      expect(matchCase1).toHaveBeenCalled();
+      autoMatcher.case('not test', noMatchCase1);
+      expect(autoMatcher.value()).toBe(matchDefaultTo1);
+      expect(noMatchCase1).not.toHaveBeenCalled();
+      autoMatcher.case('test', matchCase2);
+      expect(autoMatcher.value()).toBe(matchDefaultTo1);
+      expect(matchCase2).not.toHaveBeenCalled();
+      autoMatcher.case('not test', noMatchCase2);
+      expect(autoMatcher.value()).toBe(matchDefaultTo1);
+      expect(noMatchCase2).not.toHaveBeenCalled();
+      autoMatcher.default(matchDefault3);
+      expect(autoMatcher.value()).toBe(matchDefaultTo1);
+      expect(matchDefault3).not.toHaveBeenCalled();
+      autoMatcher.defaultTo(matchDefaultTo2);
+      expect(autoMatcher.value()).toBe(matchDefaultTo2);
+
+      matchDefault1.mockClear();
+      matchDefault2.mockClear();
+      matchCase1.mockClear();
+      noMatchCase1.mockClear();
+      matchCase2.mockClear();
+      noMatchCase2.mockClear();
+      matchDefault3.mockClear();
+
+      const matcher = new SMMatcher('test', { autoBreak: false });
+      matcher.default(matchDefault1);
+      expect(matcher.value()).toBeUndefined();
+      expect(matchDefault1).toHaveBeenCalled();
+      matcher.defaultTo(matchDefaultTo1);
+      expect(matcher.value()).toBe(matchDefaultTo1);
+      matcher.default(matchDefault2);
+      expect(matcher.value()).toBe('default 2');
+      expect(matchDefault2).toHaveBeenCalled();
+      matcher.case('test', matchCase1);
+      expect(matcher.value()).toBe(matchDefaultTo1);
+      expect(matchCase1).toHaveBeenCalled();
+      matcher.case('not test', noMatchCase1);
+      expect(matcher.value()).toBe('not matched 1');
+      expect(noMatchCase1).toHaveBeenCalled();
+      matcher.case('test', matchCase2);
+      expect(matcher.value()).toBe('not matched 1');
+      expect(matchCase2).not.toHaveBeenCalled();
+      matcher.case('not test', noMatchCase2);
+      expect(matcher.value()).toBe('not matched 1');
+      expect(noMatchCase2).not.toHaveBeenCalled();
+      matcher.default(matchDefault3);
+      expect(matcher.value()).toBe('not matched 1');
+      expect(matchDefault3).not.toHaveBeenCalled();
+      matcher.defaultTo(matchDefaultTo2);
+      expect(matcher.value()).toBe('not matched 1');
+    });
+    
+    it('should execute the next clauses the correct way: case, default, defaultTo, break', () => {
+      const matchDefault1 = jest.fn(() => {'default 1'});
+      const matchDefaultTo1 = 'defaultTo 1';
+      const matchDefault2 = jest.fn(() => 'default 2');
+      const matchCase1 = jest.fn(() => {'matched 1'});
+      const noMatchCase1 = jest.fn(() => 'not matched 1');
+      const matchCase2 = jest.fn(() => 'matched 2');
+      const noMatchCase2 = jest.fn(() => {'not matched 2'});
+      const matchDefault3 = jest.fn(() => 'default 3');
+      const matchDefaultTo2 = 'defaultTo 2';
+
+      const autoMatcher = new SMMatcher('test', { autoBreak: true });
+      autoMatcher.break();
+      autoMatcher.default(matchDefault1);
+      autoMatcher.break();
+      expect(autoMatcher.value()).toBeUndefined();
+      expect(matchDefault1).toHaveBeenCalled();
+      autoMatcher.defaultTo(matchDefaultTo1);
+      autoMatcher.break();
+      expect(autoMatcher.value()).toBe(matchDefaultTo1);
+      autoMatcher.default(matchDefault2);
+      autoMatcher.break();
+      expect(autoMatcher.value()).toBe('default 2');
+      expect(matchDefault2).toHaveBeenCalled();
+      autoMatcher.case('test', matchCase1);
+      autoMatcher.break();
+      expect(autoMatcher.value()).toBe(matchDefaultTo1);
+      expect(matchCase1).toHaveBeenCalled();
+      autoMatcher.case('not test', noMatchCase1);
+      autoMatcher.break();
+      expect(autoMatcher.value()).toBe(matchDefaultTo1);
+      expect(noMatchCase1).not.toHaveBeenCalled();
+      autoMatcher.case('test', matchCase2);
+      autoMatcher.break();
+      expect(autoMatcher.value()).toBe(matchDefaultTo1);
+      expect(matchCase2).not.toHaveBeenCalled();
+      autoMatcher.case('not test', noMatchCase2);
+      autoMatcher.break();
+      expect(autoMatcher.value()).toBe(matchDefaultTo1);
+      expect(noMatchCase2).not.toHaveBeenCalled();
+      autoMatcher.default(matchDefault3);
+      autoMatcher.break();
+      expect(autoMatcher.value()).toBe(matchDefaultTo1);
+      expect(matchDefault3).not.toHaveBeenCalled();
+      autoMatcher.defaultTo(matchDefaultTo2);
+      autoMatcher.break();
+      expect(autoMatcher.value()).toBe(matchDefaultTo2);
+
+      matchDefault1.mockClear();
+      matchDefault2.mockClear();
+      matchCase1.mockClear();
+      noMatchCase1.mockClear();
+      matchCase2.mockClear();
+      noMatchCase2.mockClear();
+      matchDefault3.mockClear();
+
+      const matcher = new SMMatcher('test', { autoBreak: false });
+      matcher.break();
+      matcher.default(matchDefault1);
+      matcher.break();
+      expect(matcher.value()).toBeUndefined();
+      expect(matchDefault1).toHaveBeenCalled();
+      matcher.defaultTo(matchDefaultTo1);
+      matcher.break();
+      expect(matcher.value()).toBe(matchDefaultTo1);
+      matcher.default(matchDefault2);
+      matcher.break();
+      expect(matcher.value()).toBe('default 2');
+      expect(matchDefault2).toHaveBeenCalled();
+      matcher.case('test', matchCase1);
+      matcher.break();
+      expect(matcher.value()).toBe(matchDefaultTo1);
+      expect(matchCase1).toHaveBeenCalled();
+      matcher.case('not test', noMatchCase1);
+      matcher.break();
+      expect(matcher.value()).toBe(matchDefaultTo1);
+      expect(noMatchCase1).not.toHaveBeenCalled();
+      matcher.case('test', matchCase2);
+      matcher.break();
+      expect(matcher.value()).toBe(matchDefaultTo1);
+      expect(matchCase2).not.toHaveBeenCalled();
+      matcher.case('not test', noMatchCase2);
+      matcher.break();
+      expect(matcher.value()).toBe(matchDefaultTo1);
+      expect(noMatchCase2).not.toHaveBeenCalled();
+      matcher.default(matchDefault3);
+      matcher.break();
+      expect(matcher.value()).toBe(matchDefaultTo1);
+      expect(matchDefault3).not.toHaveBeenCalled();
+      matcher.defaultTo(matchDefaultTo2);
+      matcher.break();
+      expect(matcher.value()).toBe(matchDefaultTo2);
+    });
+
+    it('should return the value if value is passed instead of a function', () => {
+      const autoMatcher = new SMMatcher('test', { autoBreak: true });
+      autoMatcher.default('default');
+      expect(autoMatcher.value()).toBe('default');
+      autoMatcher.case('test', 'matched');
+      expect(autoMatcher.value()).toBe('matched');
+
+      const matcher = new SMMatcher('test', { autoBreak: false });
+      matcher.default('default');
+      expect(matcher.value()).toBe('default');
+      matcher.case('test', 'matched');
+      expect(matcher.value()).toBe('matched');
+    });
+
+    it('should return the value if value is an object', () => {
+      const autoMatcher = new SMMatcher('test', { autoBreak: true });
+      autoMatcher.default(() => ([{ value: 'default' }]));
+      expect(autoMatcher.value()).toEqual([{ value: 'default' }]);
+      autoMatcher.case('test', () => ({ value: 'matched' }));
+      expect(autoMatcher.value()).toEqual({ value: 'matched' });
+
+      const matcher = new SMMatcher('test', { autoBreak: false });
+      matcher.default(() => ([{ value: 'default' }]));
+      expect(matcher.value()).toEqual([{ value: 'default' }]);
+      matcher.case('test', () => ({ value: 'matched' }));
+      expect(matcher.value()).toEqual({ value: 'matched' });
+    });
   });
 
   describe('Auto Break', () => {

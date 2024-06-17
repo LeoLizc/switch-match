@@ -112,14 +112,4 @@ export function match<T, K>(value: T, { autoBreak }: MatchOptions = {autoBreak: 
   );
 }
 
-const a = {'a': 5};
-
-const res = match<boolean, string>(true, {autoBreak: false})
-  .case(5>3, () => 'five') // * Posibilidad de no pasar función anonima
-  .break()
-  .case(4<4, () => 'six')
-  .else('default')
-  .default(() => 'default')
-  .value;
-
 export default match;
